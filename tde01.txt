@@ -1,0 +1,120 @@
+1 - select first_name, last_name  from customer c order by first_name asc
+
+2- 
+
+SELECT film.title, film.release_year
+FROM film
+WHERE film.film_id IN (
+    SELECT inventory.film_id
+    FROM rental
+    JOIN inventory ON rental.inventory_id = inventory.inventory_id
+    GROUP BY inventory.film_id
+    HAVING COUNT(*) > 5
+);
+
+
+
+3 -
+
+SELECT a.first_name FROM film_actor fa 
+JOIN actor a ON fa.actor_id = a.actor_id 
+GROUP BY a.first_name 
+HAVING COUNT(fa.actor_id) > 20;
+
+
+4 - 
+
+SELECT c.first_name , COUNT(*) as rental_count
+FROM rental r
+join customer c on r.customer_id = c.customer_id 
+GROUP BY c.customer_id 
+having count(c.customer_id) > 10 ;
+
+
+
+
+5 - 
+
+SELECT SUM(amount) as total_receita
+FROM payment;
+
+
+6 - 
+
+SELECT film.title
+FROM film
+WHERE film.film_id NOT IN (
+    SELECT DISTINCT film_id
+    FROM rental
+);
+
+
+7 - 
+
+SELECT a.first_name, a.last_name, COUNT(*) AS total_rentals
+FROM actor a
+JOIN film_actor fa ON a.actor_id = fa.actor_id
+JOIN film f ON fa.film_id = f.film_id
+JOIN inventory i ON f.film_id = i.film_id
+JOIN rental r ON i.inventory_id = r.inventory_id
+GROUP BY a.actor_id, a.first_name, a.last_name
+ORDER BY total_rentals DESC
+LIMIT 1;
+
+
+8 - 
+
+SELECT c.first_name, SUM(amount) as total_despesas
+FROM payment p
+JOIN customer c ON p.customer_id = c.customer_id
+GROUP BY c.first_name
+ORDER BY total_despesas DESC
+LIMIT 10;
+
+
+
+
+
+9 - 
+
+SELECT AVG(length) AS media_duracao
+FROM film;
+
+
+
+10 - 
+
+SELECT c.customer_id, c.first_name, c.last_name
+FROM customer c
+WHERE c.customer_id NOT IN (
+    SELECT DISTINCT r.customer_id
+    FROM rental r
+    WHERE r.rental_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+);
+
+
+
+11 - 
+SELECT 
+    YEAR(payment_date) AS ano,
+    MONTH(payment_date) AS mes,
+    AVG(amount) AS receita_media_mensal
+FROM payment
+WHERE payment_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+GROUP BY YEAR(payment_date), MONTH(payment_date)
+ORDER BY ano DESC, mes DESC;
+
+
+
+12 - 
+
+
+
+
+
+
+
+
+
+
+
